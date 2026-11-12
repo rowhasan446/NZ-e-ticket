@@ -6,10 +6,14 @@ import AboutSection from "@/components/AboutSection";
 import InstructionsList from "@/components/InstructionsList";
 import RegistrationForm from "@/components/RegistrationForm";
 import Footer from "@/components/Footer";
+import PageLoader from "@/components/PageLoader";
 
 export default function Home() {
   return (
     <div className="relative min-h-screen flex flex-col overflow-x-hidden">
+      {/* 0. Initial Loading Animation with Logo */}
+      <PageLoader />
+
       {/* 1. Kazi Nazrul Islam Watermark Background */}
       <Watermark />
 
