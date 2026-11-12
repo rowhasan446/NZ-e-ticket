@@ -213,38 +213,40 @@ export default function PrintableCard({ person }) {
             </h3>
 
             <div className="print-grid-2 grid grid-cols-2 gap-3 text-sm">
-              <div className="bg-brand-bg/40 p-3 rounded-xl border border-brand-border/40">
-                <span className="text-xs text-brand-muted block">পূর্ণ নাম:</span>
-                <span className="font-bold text-brand-dark text-base">{person.name}</span>
+              <div className="bg-brand-bg/40 p-3 pb-3.5 rounded-xl border border-brand-border/40 min-h-[66px] flex flex-col justify-center">
+                <span className="text-xs text-brand-muted block mb-0.5">পূর্ণ নাম:</span>
+                <span className="font-bold text-brand-dark text-base leading-normal break-words">{person.name}</span>
               </div>
 
-              <div className="bg-brand-bg/40 p-3 rounded-xl border border-brand-border/40">
-                <span className="text-xs text-brand-muted block">মোবাইল নম্বর:</span>
-                <span className="font-bold text-brand-dark text-base">{enToBnDigits(person.phone)}</span>
+              <div className="bg-brand-bg/40 p-3 pb-3.5 rounded-xl border border-brand-border/40 min-h-[66px] flex flex-col justify-center">
+                <span className="text-xs text-brand-muted block mb-0.5">মোবাইল নম্বর:</span>
+                <span className="font-bold text-brand-dark text-base leading-normal">{enToBnDigits(person.phone)}</span>
               </div>
 
-              <div className="bg-brand-bg/40 p-3 rounded-xl border border-brand-border/40">
-                <span className="text-xs text-brand-muted block">ইমেইল ঠিকানা:</span>
-                <span className="font-bold text-brand-dark truncate block">{person.email}</span>
+              <div className="bg-brand-bg/40 p-3 pb-3.5 rounded-xl border border-brand-border/40 min-h-[66px] flex flex-col justify-center">
+                <span className="text-xs text-brand-muted block mb-0.5">ইমেইল ঠিকানা:</span>
+                <span className="font-bold text-brand-dark text-sm sm:text-base leading-normal break-all overflow-visible block">
+                  {person.email}
+                </span>
               </div>
 
-              <div className="bg-brand-bg/40 p-3 rounded-xl border border-brand-border/40">
-                <span className="text-xs text-brand-muted block">পরিচয়পত্রের ধরন:</span>
-                <span className="font-bold text-brand-rust text-base">
+              <div className="bg-brand-bg/40 p-3 pb-3.5 rounded-xl border border-brand-border/40 min-h-[66px] flex flex-col justify-center">
+                <span className="text-xs text-brand-muted block mb-0.5">পরিচয়পত্রের ধরন:</span>
+                <span className="font-bold text-brand-rust text-base leading-normal">
                   {getIdTypeLabel(person.idType)}
                 </span>
               </div>
 
-              <div className="print-col-span-2 col-span-2 bg-brand-bg/40 p-3 rounded-xl border border-brand-border/40">
-                <span className="text-xs text-brand-muted block">পরিচয়পত্র নম্বর:</span>
-                <span className="font-mono font-bold text-brand-dark text-base tracking-wide">
+              <div className="print-col-span-2 col-span-2 bg-brand-bg/40 p-3 pb-3.5 rounded-xl border border-brand-border/40 min-h-[66px] flex flex-col justify-center">
+                <span className="text-xs text-brand-muted block mb-0.5">পরিচয়পত্র নম্বর:</span>
+                <span className="font-mono font-bold text-brand-dark text-base tracking-wide leading-normal">
                   {person.idNumber}
                 </span>
               </div>
 
-              <div className="print-col-span-2 col-span-2 bg-brand-bg/40 p-3 rounded-xl border border-brand-border/40">
-                <span className="text-xs text-brand-muted block">নিবন্ধনের তারিখ ও সময়:</span>
-                <span className="font-medium text-brand-dark">
+              <div className="print-col-span-2 col-span-2 bg-brand-bg/40 p-3 pb-3.5 rounded-xl border border-brand-border/40 min-h-[66px] flex flex-col justify-center">
+                <span className="text-xs text-brand-muted block mb-0.5">নিবন্ধনের তারিখ ও সময়:</span>
+                <span className="font-medium text-brand-dark leading-normal">
                   {formatBanglaDate(person.createdAt)}
                 </span>
               </div>
@@ -286,9 +288,8 @@ export default function PrintableCard({ person }) {
         </div>
 
         {/* Footer of the Printable Card */}
-        <div className="print-row border-t border-brand-border/60 pt-4 flex flex-row items-center justify-between text-xs text-brand-muted gap-2 text-left">
+        <div className="print-row border-t border-brand-border/60 pt-4 flex flex-row items-center justify-center text-xs text-brand-muted text-center">
           <span>{EVENT_DETAILS.copyright}</span>
-          <span>উৎসব সংক্রান্ত যেকোনো তথ্যের জন্য: {EVENT_DETAILS.phone}</span>
         </div>
       </div>
     </div>
