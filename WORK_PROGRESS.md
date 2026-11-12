@@ -5,6 +5,7 @@
 ---
 
 ## ১. প্রযুক্তি ও আর্কিটেকচার ওভারভিউ (Tech Stack)
+- **গিটহাব রিপোজিটরি:** `https://github.com/rowhasan446/NZ-e-ticket.git`
 - **ফ্রন্টএন্ড ফ্রেমওয়ার্ক:** Next.js (App Router, `.jsx` ফাইলস, নো টাইপস্ক্রিপ্ট)
 - **স্টাইলিং:** Tailwind CSS (কাস্টম থিম প্যালেট: `brand-dark`, `brand-cream`, `brand-rust`, `brand-terracotta`, `brand-bg`, `brand-heading`, `brand-cta`)
 - **ফন্ট:** Hind Siliguri (বডি ও ইউআই) এবং Tiro Bangla / Noto Serif Bengali (হেডিংস)
