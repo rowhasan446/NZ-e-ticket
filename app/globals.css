@@ -74,12 +74,24 @@ html {
 
 /* Print Stylesheet for Printable Registration Copy */
 @media print {
-  body {
+  @page {
+    size: A4 portrait;
+    margin: 8mm 10mm;
+  }
+
+  html, body {
     background: #FFFFFF !important;
-    color: #000000 !important;
-    font-size: 12pt;
-    margin: 0;
-    padding: 0;
+    color: #3B1A14 !important;
+    font-size: 11pt;
+    margin: 0 !important;
+    padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   .no-print,
@@ -96,15 +108,44 @@ html {
     width: 100% !important;
     max-width: 100% !important;
     margin: 0 !important;
-    padding: 1.5cm !important;
+    padding: 1.5rem !important;
     box-shadow: none !important;
-    border: 1px solid #ddd !important;
-    page-break-inside: avoid;
+    border: 1.5px solid #E2D1C3 !important;
+    border-radius: 1.25rem !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
   }
 
-  @page {
-    size: A4;
-    margin: 1.5cm;
+  /* Force desktop-consistent layout in print mode */
+  .print-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    text-align: left !important;
+  }
+
+  .print-grid-2 {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .print-col-span-2 {
+    grid-column: span 2 / span 2 !important;
+  }
+
+  .print-details-container {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: flex-start !important;
+    gap: 1.5rem !important;
+  }
+
+  .print-photo-box {
+    width: 9rem !important;
+    height: 11rem !important;
+    flex-shrink: 0 !important;
   }
 }
 
