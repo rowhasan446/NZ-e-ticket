@@ -15,6 +15,7 @@ import {
   Hash, 
   Calendar, 
   ShieldCheck,
+  Download,
   Loader2 
 } from "lucide-react";
 import { getIdTypeLabel, formatBanglaDate, enToBnDigits } from "@/lib/bn";
@@ -188,41 +189,60 @@ export default function ViewDrawer({ isOpen, onClose, personId }) {
                 </div>
 
                 <div className="bg-brand-bg/40 p-4 rounded-2xl border border-brand-border/60">
-                  {person.idDocument?.previewUrl ? (
+                  {person.idDocument?.publicId || person.idDocument?.url ? (
                     <div className="space-y-3">
                       {isDocPdf ? (
-                        <div className="p-6 bg-white rounded-xl border border-brand-border text-center space-y-3 shadow-xs">
-                          <FileText className="w-12 h-12 text-red-600 mx-auto" />
-                          <div>
-                            <p className="font-bold text-sm text-brand-dark">PDF পরিচয়পত্র ডকুমেন্ট</p>
-                            <p className="text-xs text-brand-muted mt-0.5">নিরাপদ ভিউয়ের জন্য নতুন ট্যাবে খুলুন</p>
+                        <div className="space-y-3">
+                          {/* Embedded Interactive PDF Viewer */}
+                          <div className="relative w-full h-[460px] rounded-xl overflow-hidden border border-brand-border bg-white shadow-xs">
+                            <iframe
+                              src={`/api/admin/people/${person._id}/doc#toolbar=1`}
+                              title="PDF ডকুমেন্ট প্রিভিউ"
+                              className="w-full h-full border-0"
+                            />
                           </div>
-                          <a
-                            href={person.idDocument.previewUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="inline-flex items-center gap-2 bg-brand-rust hover:bg-brand-terracotta text-white text-xs font-bold px-4 py-2 rounded-xl transition-colors shadow-xs"
-                          >
-                            <ExternalLink className="w-3.5 h-3.5" />
-                            PDF প্রিভিউ দেখুন
-                          </a>
+
+                          <div className="flex flex-wrap items-center justify-between gap-2 pt-1 text-xs">
+                            <span className="text-brand-muted flex items-center gap-1.5 font-medium">
+                              <FileText className="w-4 h-4 text-red-600" />
+                              PDF পরিচয়পত্র ফাইল
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <a
+                                href={`/api/admin/people/${person._id}/doc`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1.5 bg-brand-cream/80 hover:bg-brand-cream text-brand-dark px-3 py-1.5 rounded-lg border border-brand-border text-xs font-semibold transition-colors shadow-2xs"
+                              >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                                নতুন ট্যাবে খুলুন
+                              </a>
+                              <a
+                                href={`/api/admin/people/${person._id}/doc?download=1`}
+                                className="inline-flex items-center gap-1.5 bg-brand-terracotta hover:bg-brand-terracotta-dark text-white px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors shadow-2xs"
+                              >
+                                <Download className="w-3.5 h-3.5" />
+                                ডাউনলোড
+                              </a>
+                            </div>
+                          </div>
                         </div>
                       ) : (
                         <div className="space-y-2">
                           <div className="relative w-full h-72 rounded-xl overflow-hidden border border-brand-border bg-white shadow-xs">
-                            <Image
-                              src={person.idDocument.previewUrl}
+                            <img
+                              src={`/api/admin/people/${person._id}/doc`}
                               alt="পরিচয়পত্র ডকুমেন্ট"
-                              fill
-                              className="object-contain"
+                              className="w-full h-full object-contain"
                             />
                           </div>
-                          <div className="text-right">
+                          <div className="flex items-center justify-between text-xs pt-1">
+                            <span className="text-brand-muted font-medium">ছবি পরিচয়পত্র</span>
                             <a
-                              href={person.idDocument.previewUrl}
+                              href={`/api/admin/people/${person._id}/doc`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex items-center gap-1.5 text-xs font-bold text-brand-rust hover:underline"
+                              className="inline-flex items-center gap-1.5 font-bold text-brand-rust hover:underline"
                             >
                               <ExternalLink className="w-3.5 h-3.5" />
                               আসল সাইজে দেখুন

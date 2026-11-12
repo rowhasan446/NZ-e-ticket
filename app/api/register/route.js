@@ -152,13 +152,14 @@ export async function POST(request) {
       const docUploadRes = await uploadToCloudinary(docBuffer, {
         public_id: `${userId}_doc_${Date.now()}`,
         type: "authenticated", // Private authenticated file
-        resource_type: isDocPdf ? "raw" : "image",
+        resource_type: "image",
+        format: isDocPdf ? "pdf" : undefined,
       });
 
       idDocData = {
         url: docUploadRes.secure_url,
         publicId: docUploadRes.public_id,
-        resourceType: isDocPdf ? "raw" : "image",
+        resourceType: isDocPdf ? "pdf" : "image",
       };
 
       // Upload Photo if provided

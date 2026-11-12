@@ -36,14 +36,53 @@ export default function PrintableCard({ person }) {
     setIsDownloading(true);
 
     try {
-      // Use html2canvas with forced desktop width to guarantee identical layout
+      // Use html2canvas with forced desktop width and onclone layout locking
       const element = cardRef.current;
       const canvas = await html2canvas(element, {
         scale: 2.5, // High resolution for crisp Bengali text
         useCORS: true,
         logging: false,
         backgroundColor: "#FFFFFF",
-        windowWidth: 1024,
+        windowWidth: 1200,
+        onclone: (clonedDoc) => {
+          const clonedCard = clonedDoc.querySelector(".print-area");
+          if (clonedCard) {
+            clonedCard.style.width = "820px";
+            clonedCard.style.maxWidth = "820px";
+            clonedCard.style.padding = "2.5rem";
+
+            const headerRow = clonedDoc.querySelector(".print-row-header");
+            if (headerRow) {
+              headerRow.style.display = "flex";
+              headerRow.style.flexDirection = "row";
+              headerRow.style.textAlign = "left";
+              headerRow.style.justifyContent = "space-between";
+            }
+
+            const idGrid = clonedDoc.querySelector(".print-grid-id");
+            if (idGrid) {
+              idGrid.style.display = "grid";
+              idGrid.style.gridTemplateColumns = "1fr 1fr";
+            }
+
+            const detailsContainer = clonedDoc.querySelector(".print-details-container");
+            if (detailsContainer) {
+              detailsContainer.style.display = "flex";
+              detailsContainer.style.flexDirection = "row";
+              detailsContainer.style.alignItems = "flex-start";
+            }
+
+            const detailsGrid = clonedDoc.querySelector(".print-grid-details");
+            if (detailsGrid) {
+              detailsGrid.style.display = "grid";
+              detailsGrid.style.gridTemplateColumns = "1fr 1fr";
+            }
+
+            clonedDoc.querySelectorAll(".print-col-span-2").forEach((el) => {
+              el.style.gridColumn = "span 2 / span 2";
+            });
+          }
+        },
       });
 
       const imgData = canvas.toDataURL("image/png");
@@ -67,9 +106,9 @@ export default function PrintableCard({ person }) {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-8 sm:py-12">
+    <div className="max-w-4xl mx-auto px-3 sm:px-4 py-6 sm:py-12">
       {/* Top action and back navigation (Hidden when printing) */}
-      <div className="no-print flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 bg-white/90 p-4 sm:p-5 rounded-2xl shadow-soft border border-brand-border">
+      <div className="no-print flex flex-col sm:flex-row items-center justify-between gap-4 mb-6 sm:mb-8 bg-white/90 p-4 sm:p-5 rounded-2xl shadow-soft border border-brand-border">
         <Link
           href="/"
           className="inline-flex items-center gap-2 text-sm font-semibold text-brand-heading hover:text-brand-terracotta transition-colors"
@@ -107,13 +146,13 @@ export default function PrintableCard({ person }) {
         </div>
       </div>
 
-      {/* Printable Slip Card (A4 Aspect Ratio friendly) */}
+      {/* Printable Slip Card (A4 Aspect Ratio friendly & Mobile Responsive on screen) */}
       <div
         ref={cardRef}
-        className="print-area bg-white text-brand-dark rounded-3xl p-8 sm:p-12 shadow-elevated border-2 border-brand-border relative overflow-hidden"
+        className="print-area bg-white text-brand-dark rounded-3xl p-4 sm:p-8 md:p-12 shadow-elevated border-2 border-brand-border relative overflow-hidden"
       >
         {/* Subtle Watermark seal */}
-        <div className="absolute right-6 bottom-6 opacity-5 pointer-events-none select-none">
+        <div className="absolute right-4 bottom-4 sm:right-6 sm:bottom-6 opacity-5 pointer-events-none select-none">
           <Image
             src="/logo.png"
             alt=""
@@ -124,9 +163,9 @@ export default function PrintableCard({ person }) {
         </div>
 
         {/* Header Section */}
-        <div className="border-b-2 border-brand-rust/30 pb-6 mb-6">
-          <div className="print-row flex flex-row items-center justify-between gap-4 text-left">
-            <div className="flex items-center gap-4">
+        <div className="border-b-2 border-brand-rust/30 pb-5 sm:pb-6 mb-5 sm:mb-6">
+          <div className="print-row print-row-header flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 text-center sm:text-left">
+            <div className="flex flex-col sm:flex-row items-center gap-3.5 sm:gap-4">
               <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-brand-cream/60 p-1.5 rounded-2xl border border-brand-border flex-shrink-0">
                 <Image
                   src="/logo.png"
@@ -161,11 +200,11 @@ export default function PrintableCard({ person }) {
         </div>
 
         {/* Title & Theme Banner */}
-        <div className="text-center bg-brand-bg/60 border border-brand-border/60 rounded-2xl p-4 mb-6">
-          <h1 className="text-2xl sm:text-3xl font-serif font-black text-brand-heading">
+        <div className="text-center bg-brand-bg/60 border border-brand-border/60 rounded-2xl p-3.5 sm:p-4 mb-5 sm:mb-6">
+          <h1 className="text-xl sm:text-3xl font-serif font-black text-brand-heading">
             {EVENT_DETAILS.title}
           </h1>
-          <p className="text-sm font-serif italic text-brand-rust font-bold mt-1">
+          <p className="text-xs sm:text-sm font-serif italic text-brand-rust font-bold mt-1">
             প্রতিপাদ্য: ''{EVENT_DETAILS.theme}''
           </p>
           <p className="text-xs font-medium text-brand-muted mt-1">
@@ -174,30 +213,30 @@ export default function PrintableCard({ person }) {
         </div>
 
         {/* Primary Identifier Box (Prominent User ID & Serial) */}
-        <div className="print-grid-2 grid grid-cols-2 gap-4 bg-brand-dark text-white rounded-2xl p-5 mb-8 shadow-sm">
+        <div className="print-grid-2 print-grid-id grid grid-cols-1 sm:grid-cols-2 gap-4 bg-brand-dark text-white rounded-2xl p-4 sm:p-5 mb-6 sm:mb-8 shadow-sm">
           <div className="flex items-center gap-3.5">
-            <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 text-brand-cream">
-              <Hash className="w-6 h-6" />
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 text-brand-cream">
+              <Hash className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div>
               <span className="block text-xs text-brand-cream/80 font-medium">
                 নিবন্ধন শনাক্তকারী আইডি (User ID)
               </span>
-              <span className="text-2xl sm:text-3xl font-mono font-black tracking-wider text-brand-cream">
+              <span className="text-xl sm:text-3xl font-mono font-black tracking-wider text-brand-cream">
                 {person.userId}
               </span>
             </div>
           </div>
 
-          <div className="flex items-center gap-3.5 border-l border-white/20 pl-6">
-            <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 text-brand-cream">
-              <CheckCircle className="w-6 h-6" />
+          <div className="flex items-center gap-3.5 border-t sm:border-t-0 sm:border-l border-white/20 pt-3 sm:pt-0 sm:pl-6">
+            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0 text-brand-cream">
+              <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" />
             </div>
             <div>
               <span className="block text-xs text-brand-cream/80 font-medium">
                 ক্রমিক নম্বর (Serial No)
               </span>
-              <span className="text-2xl sm:text-3xl font-serif font-black text-white">
+              <span className="text-xl sm:text-3xl font-serif font-black text-white">
                 #{enToBnDigits(person.serial)}
               </span>
             </div>
@@ -205,14 +244,14 @@ export default function PrintableCard({ person }) {
         </div>
 
         {/* Registrant Details Grid & Photo */}
-        <div className="print-details-container flex flex-row gap-6 mb-8 items-start">
+        <div className="print-details-container flex flex-col-reverse md:flex-row gap-6 mb-6 sm:mb-8 items-center md:items-start">
           {/* Details Table */}
-          <div className="flex-1 space-y-3">
-            <h3 className="font-serif font-bold text-lg text-brand-heading border-b border-brand-border/60 pb-2">
+          <div className="w-full flex-1 space-y-3">
+            <h3 className="font-serif font-bold text-base sm:text-lg text-brand-heading border-b border-brand-border/60 pb-2">
               নিবন্ধিত ব্যক্তির বিবরণ
             </h3>
 
-            <div className="print-grid-2 grid grid-cols-2 gap-3 text-sm">
+            <div className="print-grid-2 print-grid-details grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
               <div className="bg-brand-bg/40 p-3 pb-3.5 rounded-xl border border-brand-border/40 min-h-[66px] flex flex-col justify-center">
                 <span className="text-xs text-brand-muted block mb-0.5">পূর্ণ নাম:</span>
                 <span className="font-bold text-brand-dark text-base leading-normal break-words">{person.name}</span>
@@ -237,14 +276,14 @@ export default function PrintableCard({ person }) {
                 </span>
               </div>
 
-              <div className="print-col-span-2 col-span-2 bg-brand-bg/40 p-3 pb-3.5 rounded-xl border border-brand-border/40 min-h-[66px] flex flex-col justify-center">
+              <div className="print-col-span-2 sm:col-span-2 bg-brand-bg/40 p-3 pb-3.5 rounded-xl border border-brand-border/40 min-h-[66px] flex flex-col justify-center">
                 <span className="text-xs text-brand-muted block mb-0.5">পরিচয়পত্র নম্বর:</span>
                 <span className="font-mono font-bold text-brand-dark text-base tracking-wide leading-normal">
                   {person.idNumber}
                 </span>
               </div>
 
-              <div className="print-col-span-2 col-span-2 bg-brand-bg/40 p-3 pb-3.5 rounded-xl border border-brand-border/40 min-h-[66px] flex flex-col justify-center">
+              <div className="print-col-span-2 sm:col-span-2 bg-brand-bg/40 p-3 pb-3.5 rounded-xl border border-brand-border/40 min-h-[66px] flex flex-col justify-center">
                 <span className="text-xs text-brand-muted block mb-0.5">নিবন্ধনের তারিখ ও সময়:</span>
                 <span className="font-medium text-brand-dark leading-normal">
                   {formatBanglaDate(person.createdAt)}
@@ -256,7 +295,7 @@ export default function PrintableCard({ person }) {
           {/* User Photo (if provided) */}
           <div className="flex flex-col items-center justify-start text-center flex-shrink-0">
             <span className="text-xs font-semibold text-brand-muted mb-2">নিবন্ধকের ছবি</span>
-            <div className="print-photo-box relative w-36 h-44 rounded-2xl overflow-hidden border-2 border-brand-border bg-brand-cream/30 shadow-sm flex items-center justify-center">
+            <div className="print-photo-box relative w-32 h-40 sm:w-36 sm:h-44 rounded-2xl overflow-hidden border-2 border-brand-border bg-brand-cream/30 shadow-sm flex items-center justify-center">
               {person.photo?.url ? (
                 <Image
                   src={person.photo.url}
@@ -275,10 +314,10 @@ export default function PrintableCard({ person }) {
         </div>
 
         {/* Prominent Mandatory Note Requirement: "এটি ই-টিকিট নয়। ই-টিকিট পরে সরবরাহ করা হবে।" */}
-        <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 sm:p-5 flex items-center gap-3.5 text-amber-900 mb-8">
+        <div className="bg-amber-50 border-2 border-amber-300 rounded-2xl p-4 sm:p-5 flex items-center gap-3.5 text-amber-900 mb-6 sm:mb-8">
           <ShieldAlert className="w-6 h-6 text-amber-700 flex-shrink-0" />
           <div>
-            <p className="font-serif font-bold text-base sm:text-lg">
+            <p className="font-serif font-bold text-sm sm:text-base md:text-lg">
               বিশেষ দ্রষ্টব্য: এটি ই-টিকিট নয়। ই-টিকিট পরে সরবরাহ করা হবে।
             </p>
             <p className="text-xs sm:text-sm text-amber-800 mt-0.5">
