@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-hind-siliguri: "Hind Siliguri", sans-serif;
+  --font-heading: "Noto Serif Bengali", serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: var(--font-hind-siliguri);
+  background-color: #F6E7DC;
+  color: #3B1A14;
+}
+
+::selection {
+  background-color: #9E3F26;
+  color: #FFFFFF;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F6E7DC;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #B5532F;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #943F20;
+}
+
+/* Print Stylesheet for Printable Registration Copy */
+@media print {
+  body {
+    background: #FFFFFF !important;
+    color: #000000 !important;
+    font-size: 12pt;
+    margin: 0;
+    padding: 0;
+  }
+
+  .no-print,
+  nav,
+  header,
+  footer,
+  .watermark-container,
+  button,
+  .action-buttons {
+    display: none !important;
+  }
+
+  .print-area {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 1.5cm !important;
+    box-shadow: none !important;
+    border: 1px solid #ddd !important;
+    page-break-inside: avoid;
+  }
+
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+}
+
