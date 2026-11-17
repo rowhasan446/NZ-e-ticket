@@ -117,11 +117,19 @@ html {
   }
 
   /* Force desktop-consistent layout in print mode */
-  .print-row {
+  .print-row,
+  .print-row-header {
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: space-between !important;
+    text-align: left !important;
+  }
+
+  .print-row-left {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
     text-align: left !important;
   }
 

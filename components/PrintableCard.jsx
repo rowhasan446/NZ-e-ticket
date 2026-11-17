@@ -57,6 +57,15 @@ export default function PrintableCard({ person }) {
               headerRow.style.flexDirection = "row";
               headerRow.style.textAlign = "left";
               headerRow.style.justifyContent = "space-between";
+              headerRow.style.alignItems = "center";
+            }
+
+            const headerLeft = clonedDoc.querySelector(".print-row-left");
+            if (headerLeft) {
+              headerLeft.style.display = "flex";
+              headerLeft.style.flexDirection = "row";
+              headerLeft.style.textAlign = "left";
+              headerLeft.style.alignItems = "center";
             }
 
             const idGrid = clonedDoc.querySelector(".print-grid-id");
@@ -165,8 +174,9 @@ export default function PrintableCard({ person }) {
         {/* Header Section */}
         <div className="border-b-2 border-brand-rust/30 pb-5 sm:pb-6 mb-5 sm:mb-6">
           <div className="print-row print-row-header flex flex-col sm:flex-row items-center sm:items-start justify-between gap-4 text-center sm:text-left">
-            <div className="flex flex-col sm:flex-row items-center gap-3.5 sm:gap-4">
-              <div className="relative w-16 h-16 sm:w-20 sm:h-20 bg-brand-cream/60 p-1.5 rounded-2xl border border-brand-border flex-shrink-0">
+            {/* Left: BNSS Logo + Titles strictly on the left */}
+            <div className="print-row-left flex flex-row items-center gap-3.5 sm:gap-4 text-left flex-shrink-0">
+              <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 bg-brand-cream/60 p-1.5 rounded-2xl border border-brand-border flex-shrink-0">
                 <Image
                   src="/logo.png"
                   alt="BNSS Logo"
@@ -174,7 +184,7 @@ export default function PrintableCard({ person }) {
                   className="object-contain p-1"
                 />
               </div>
-              <div>
+              <div className="text-left">
                 <h2 className="text-xl sm:text-2xl font-serif font-black text-brand-heading">
                   {EVENT_DETAILS.organizer}
                 </h2>
@@ -187,20 +197,44 @@ export default function PrintableCard({ person }) {
               </div>
             </div>
 
-            {/* Official Registration Slip Badge */}
-            <div className="bg-brand-cream/80 border border-brand-rust/40 rounded-2xl px-5 py-2.5 text-center flex-shrink-0">
-              <span className="block text-xs font-semibold text-brand-rust uppercase tracking-wider">
-                অফিসিয়াল কপি
-              </span>
-              <span className="block text-sm sm:text-base font-serif font-bold text-brand-heading">
-                নিবন্ধন তথ্য স্লিপ
-              </span>
+            {/* Right: Gulshan Society Logo + Official Registration Slip Badge */}
+            <div className="flex items-center gap-2.5 sm:gap-3 flex-shrink-0">
+              <div className="relative h-11 w-11 sm:h-13 sm:w-13 bg-white rounded-xl shadow-xs border border-brand-border/60 p-1 flex items-center justify-center overflow-hidden">
+                <Image
+                  src="/gulshan.jpeg"
+                  alt="Gulshan Society"
+                  fill
+                  className="object-contain p-0.5 sm:p-1"
+                />
+              </div>
+              <div className="bg-brand-cream/80 border border-brand-rust/40 rounded-2xl px-4 sm:px-5 py-2 sm:py-2.5 text-center">
+                <span className="block text-xs font-semibold text-brand-rust uppercase tracking-wider">
+                  অফিসিয়াল কপি
+                </span>
+                <span className="block text-sm sm:text-base font-serif font-bold text-brand-heading">
+                  নিবন্ধন তথ্য স্লিপ
+                </span>
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Title & Theme Banner */}
-        <div className="text-center bg-brand-bg/60 border border-brand-border/60 rounded-2xl p-3.5 sm:p-4 mb-5 sm:mb-6">
+        {/* Title & Theme Banner with Guardian Logo inside the border */}
+        <div className="text-center bg-brand-bg/60 border border-brand-border/60 rounded-2xl p-4 sm:p-5 mb-5 sm:mb-6">
+          {/* Middle Guardian Logo placed cleanly inside the portion */}
+          <div className="flex justify-center mb-3">
+            <div className="inline-flex bg-white rounded-xl px-3.5 py-1.5 shadow-2xs border border-brand-border/40">
+              <div className="relative h-8 sm:h-10 w-28 sm:w-36 flex items-center justify-center">
+                <Image
+                  src="/Gardian.jpeg"
+                  alt="Guardian Life Insurance"
+                  fill
+                  className="object-contain"
+                />
+              </div>
+            </div>
+          </div>
+
           <h1 className="text-xl sm:text-3xl font-serif font-black text-brand-heading">
             {EVENT_DETAILS.title}
           </h1>
@@ -326,9 +360,44 @@ export default function PrintableCard({ person }) {
           </div>
         </div>
 
-        {/* Footer of the Printable Card */}
-        <div className="print-row border-t border-brand-border/60 pt-4 flex flex-row items-center justify-center text-xs text-brand-muted text-center">
-          <span>{EVENT_DETAILS.copyright}</span>
+        {/* Footer of the Printable Card with 3 Partner Logos */}
+        <div className="border-t border-brand-border/60 pt-4 space-y-3">
+          <div className="text-xs text-brand-muted text-center">
+            <span>{EVENT_DETAILS.copyright}</span>
+          </div>
+
+          {/* Bottom 3 Partner Logos */}
+          <div className="flex items-center justify-center gap-6 sm:gap-10 pt-1 pb-1">
+            {/* 1. Anondo */}
+            <div className="relative h-9 sm:h-11 w-14 sm:w-16 flex items-center justify-center">
+              <Image
+                src="/anondo.jpeg"
+                alt="Anondo"
+                fill
+                className="object-contain"
+              />
+            </div>
+
+            {/* 2. Novoair */}
+            <div className="relative h-8 sm:h-10 w-22 sm:w-28 flex items-center justify-center">
+              <Image
+                src="/novoair.jpeg"
+                alt="NOVOAIR"
+                fill
+                className="object-contain"
+              />
+            </div>
+
+            {/* 3. TriCode It */}
+            <div className="relative h-10 sm:h-12 w-14 sm:w-16 flex items-center justify-center">
+              <Image
+                src="/tricode.png"
+                alt="TriCode IT"
+                fill
+                className="object-contain"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>

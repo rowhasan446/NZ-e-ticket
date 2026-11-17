@@ -80,10 +80,25 @@ export default function Header() {
             </div>
           </div>
 
-          <div className="hidden lg:flex items-center text-right">
-            <div className="bg-white/60 border border-brand-border/60 rounded-xl px-4 py-2 shadow-sm backdrop-blur-sm">
-              <span className="block text-xs font-semibold text-brand-rust">বিশেষ জাতীয় উৎসব</span>
-              <span className="text-sm font-serif font-bold text-brand-heading">নজরুল উৎসব ২০২৬</span>
+          {/* Right Section: Gulshan Society Logo + Event Badge */}
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            {/* Gulshan Society Partner Logo */}
+            <div className="relative h-11 w-11 sm:h-14 sm:w-14 bg-white rounded-xl shadow-xs border border-brand-border/60 p-1 flex-shrink-0 flex items-center justify-center overflow-hidden">
+              <Image
+                src="/gulshan.jpeg"
+                alt="Gulshan Society"
+                fill
+                priority
+                className="object-contain p-0.5 sm:p-1"
+              />
+            </div>
+
+            {/* Special National Festival Badge */}
+            <div className="hidden sm:block text-right">
+              <div className="bg-white/70 border border-brand-border/60 rounded-xl px-3.5 sm:px-4 py-1.5 sm:py-2 shadow-xs backdrop-blur-xs">
+                <span className="block text-[11px] sm:text-xs font-semibold text-brand-rust">বিশেষ জাতীয় উৎসব</span>
+                <span className="text-xs sm:text-sm font-serif font-bold text-brand-heading">নজরুল উৎসব ২০২৬</span>
+              </div>
             </div>
           </div>
         </div>
@@ -97,7 +112,7 @@ export default function Header() {
             : "relative shadow-md"
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between h-13 sm:h-14">
+        <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between h-14">
           {/* Logo hint on scroll */}
           <div className={`transition-opacity duration-300 flex items-center gap-2 ${isScrolled ? "opacity-100" : "opacity-0 pointer-events-none w-0"}`}>
             <span className="font-serif font-bold text-sm tracking-wide text-brand-cream truncate max-w-[200px] sm:max-w-none">

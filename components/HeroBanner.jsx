@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { UserPlus, Sparkles, MapPin, Calendar, ArrowDownCircle, ShieldCheck } from "lucide-react";
+import { UserPlus, MapPin, Calendar, ArrowDownCircle, ShieldCheck } from "lucide-react";
 import { EVENT_DETAILS } from "@/lib/config";
 
 export default function HeroBanner() {
@@ -13,10 +13,17 @@ export default function HeroBanner() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* 1. Left Column: Information, About, Details & Registration Button */}
           <div className="lg:col-span-6 space-y-5 sm:space-y-6 text-left">
-            {/* Organizer Tag */}
-            <div className="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-brand-cream px-3.5 py-1.5 rounded-full text-xs sm:text-sm font-medium backdrop-blur-md">
-              <Sparkles className="w-3.5 h-3.5 text-brand-terracotta" />
-              <span>{EVENT_DETAILS.organizer} আয়োজিত</span>
+            {/* Top Partner Logo: Guardian Life Insurance */}
+            <div className="inline-flex">
+              <div className="relative h-[52px] sm:h-[62px] md:h-[70px] w-[170px] sm:w-[210px] md:w-[240px] bg-white rounded-xl sm:rounded-2xl p-1.5 sm:p-2 shadow-md border border-white/30 flex items-center justify-center overflow-hidden">
+                <Image
+                  src="/Gardian.jpeg"
+                  alt="Guardian Life Insurance"
+                  fill
+                  priority
+                  className="object-contain p-1"
+                />
+              </div>
             </div>
 
             {/* Main Heading */}
@@ -36,7 +43,7 @@ export default function HeroBanner() {
 
             {/* About / Overview Short Copy */}
             <p className="text-sm sm:text-base md:text-lg text-white/85 leading-relaxed font-normal">
-              জাতীয় কবি কাজী নজরুল ইসলামের সাম্য, দ্রোহ ও মানবমুক্তির চেতনাকে ধারণ করে অনুষ্ঠিত হতে যাচ্ছে দুই দিনব্যাপী এই বর্ণাঢ্য আয়োজন। নজরুলের অমর সৃষ্টিকর্ম ও সুরধারার উদ্যাপনে দেশ-বিদেশের শিল্পী, অনুরাগী ও সংস্কৃতিপ্রেমীদের মিলনমেলা।
+              জাতীয় কবি কাজী নজরুল ইসলামের সাম্য, দ্রোহ ও মানবমুক্তির চেতনাকে ধারণ করে অনুষ্ঠিত হতে যাচ্ছে দুইদিনব্যাপী এই বর্ণাঢ্য আয়োজন। নজরুলের অমর সৃষ্টিকর্ম ও সুরধারার উৎযাপনে দেশ-বিদেশের শিল্পী, অনুরাগী ও সংস্কৃতিপ্রেমীদের মিলনমেলা।
             </p>
 
             {/* Date & Location Badges */}
@@ -66,16 +73,42 @@ export default function HeroBanner() {
               </div>
             </div>
 
-            {/* Left Bottom Registration CTA Button */}
-            <div className="pt-3 sm:pt-4 space-y-2">
-              <a
-                href="#register"
-                className="inline-flex items-center justify-center gap-3 bg-brand-terracotta hover:bg-brand-terracotta-dark text-white font-bold text-base sm:text-lg px-8 py-4 rounded-2xl shadow-elevated transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-brand-ring/40 w-full sm:w-auto"
-              >
-                <UserPlus className="w-5 h-5" />
-                <span>নিবন্ধন করুন</span>
-                <ArrowDownCircle className="w-5 h-5 text-brand-cream hidden sm:inline" />
-              </a>
+            {/* Bottom Row: CTA Button + Anondo & Novoair Partner Logos */}
+            <div className="pt-2 sm:pt-3 space-y-3">
+              <div className="flex flex-wrap items-center gap-3 sm:gap-4">
+                {/* Registration CTA Button */}
+                <a
+                  href="#register"
+                  className="inline-flex items-center justify-center gap-2.5 sm:gap-3 bg-brand-terracotta hover:bg-brand-terracotta-dark text-white font-bold text-base sm:text-lg px-6 sm:px-7 py-3 sm:py-3.5 rounded-2xl shadow-elevated transform hover:-translate-y-0.5 active:translate-y-0 transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-brand-ring/40 w-full sm:w-auto"
+                >
+                  <UserPlus className="w-5 h-5" />
+                  <span>নিবন্ধন করুন</span>
+                  <ArrowDownCircle className="w-5 h-5 text-brand-cream" />
+                </a>
+
+                {/* Bottom 2 Partner Logos */}
+                <div className="flex items-center gap-2.5 sm:gap-3">
+                  {/* Anondo Logo Card */}
+                  <div className="relative h-[48px] sm:h-[54px] w-[64px] sm:w-[74px] bg-white rounded-xl sm:rounded-2xl p-1 shadow-sm border border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <Image
+                      src="/anondo.jpeg"
+                      alt="Anondo Logo"
+                      fill
+                      className="object-contain p-1"
+                    />
+                  </div>
+
+                  {/* Novoair Logo Card */}
+                  <div className="relative h-[48px] sm:h-[54px] w-[100px] sm:w-[124px] bg-white rounded-xl sm:rounded-2xl p-1 shadow-sm border border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <Image
+                      src="/novoair.jpeg"
+                      alt="NOVOAIR Logo"
+                      fill
+                      className="object-contain p-1.5"
+                    />
+                  </div>
+                </div>
+              </div>
 
               <p className="text-xs text-white/60 flex items-center gap-1.5 pl-1">
                 <ShieldCheck className="w-4 h-4 text-emerald-400" />
