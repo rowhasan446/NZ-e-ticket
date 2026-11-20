@@ -155,5 +155,14 @@ html {
     height: 11rem !important;
     flex-shrink: 0 !important;
   }
+
+  .print-logos-row {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: center !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 1.5rem !important;
+  }
 }
 

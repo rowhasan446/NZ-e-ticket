@@ -90,6 +90,16 @@ export default function PrintableCard({ person }) {
             clonedDoc.querySelectorAll(".print-col-span-2").forEach((el) => {
               el.style.gridColumn = "span 2 / span 2";
             });
+
+            const logosRow = clonedDoc.querySelector(".print-logos-row");
+            if (logosRow) {
+              logosRow.style.display = "flex";
+              logosRow.style.flexDirection = "row";
+              logosRow.style.justifyContent = "center";
+              logosRow.style.alignItems = "center";
+              logosRow.style.flexWrap = "nowrap";
+              logosRow.style.gap = "1.5rem";
+            }
           }
         },
       });
@@ -360,16 +370,46 @@ export default function PrintableCard({ person }) {
           </div>
         </div>
 
-        {/* Footer of the Printable Card with 3 Partner Logos */}
+        {/* Footer of the Printable Card with Partner Logos */}
         <div className="border-t border-brand-border/60 pt-4 space-y-3">
           <div className="text-xs text-brand-muted text-center">
             <span>{EVENT_DETAILS.copyright}</span>
           </div>
 
-          {/* Bottom 3 Partner Logos */}
-          <div className="flex items-center justify-center gap-6 sm:gap-10 pt-1 pb-1">
-            {/* 1. Anondo */}
-            <div className="relative h-9 sm:h-11 w-14 sm:w-16 flex items-center justify-center">
+          {/* Bottom Partner Logos in required sequence */}
+          <div className="print-logos-row flex items-center justify-center gap-4 sm:gap-6 pt-1 pb-1 flex-wrap">
+            {/* 1. Jamuna Bank */}
+            <div className="relative h-[24px] sm:h-[28px] w-[105px] sm:w-[125px] flex items-center justify-center flex-shrink-0">
+              <Image
+                src="/jamuna.png"
+                alt="Jamuna Bank"
+                fill
+                className="object-contain"
+              />
+            </div>
+
+            {/* 2. AIUB */}
+            <div className="relative h-[28px] sm:h-[34px] w-[24px] sm:w-[30px] flex items-center justify-center flex-shrink-0">
+              <Image
+                src="/aiub.jpeg"
+                alt="AIUB"
+                fill
+                className="object-contain"
+              />
+            </div>
+
+            {/* 3. Channel 24 */}
+            <div className="relative h-[28px] sm:h-[34px] w-[30px] sm:w-[36px] flex items-center justify-center flex-shrink-0">
+              <Image
+                src="/channel24.png"
+                alt="Channel 24"
+                fill
+                className="object-contain"
+              />
+            </div>
+
+            {/* 4. Anondo */}
+            <div className="relative h-[28px] sm:h-[34px] w-[36px] sm:w-[44px] flex items-center justify-center flex-shrink-0">
               <Image
                 src="/anondo.jpeg"
                 alt="Anondo"
@@ -378,8 +418,8 @@ export default function PrintableCard({ person }) {
               />
             </div>
 
-            {/* 2. Novoair */}
-            <div className="relative h-8 sm:h-10 w-22 sm:w-28 flex items-center justify-center">
+            {/* 5. Novoair */}
+            <div className="relative h-[26px] sm:h-[32px] w-[80px] sm:w-[100px] flex items-center justify-center flex-shrink-0">
               <Image
                 src="/novoair.jpeg"
                 alt="NOVOAIR"
@@ -388,8 +428,8 @@ export default function PrintableCard({ person }) {
               />
             </div>
 
-            {/* 3. TriCode It */}
-            <div className="relative h-10 sm:h-12 w-14 sm:w-16 flex items-center justify-center">
+            {/* 6. TriCode It */}
+            <div className="relative h-[28px] sm:h-[34px] w-[30px] sm:w-[36px] flex items-center justify-center flex-shrink-0">
               <Image
                 src="/tricode.png"
                 alt="TriCode IT"

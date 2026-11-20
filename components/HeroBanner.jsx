@@ -10,9 +10,9 @@ export default function HeroBanner() {
       <div className="absolute bottom-0 left-10 w-80 h-80 bg-brand-terracotta/15 rounded-full blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 md:py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center">
           {/* 1. Left Column: Information, About, Details & Registration Button */}
-          <div className="lg:col-span-6 space-y-5 sm:space-y-6 text-left">
+          <div className="lg:col-span-7 space-y-5 sm:space-y-6 text-left">
             {/* Top Partner Logo: Guardian Life Insurance */}
             <div className="inline-flex">
               <div className="relative h-[52px] sm:h-[62px] md:h-[70px] w-[170px] sm:w-[210px] md:w-[240px] bg-white rounded-xl sm:rounded-2xl p-1.5 sm:p-2 shadow-md border border-white/30 flex items-center justify-center overflow-hidden">
@@ -73,7 +73,7 @@ export default function HeroBanner() {
               </div>
             </div>
 
-            {/* Bottom Row: CTA Button + Anondo & Novoair Partner Logos */}
+            {/* Bottom Row: CTA Button + Partner Logos */}
             <div className="pt-2 sm:pt-3 space-y-3">
               <div className="flex flex-wrap items-center gap-3 sm:gap-4">
                 {/* Registration CTA Button */}
@@ -86,10 +86,40 @@ export default function HeroBanner() {
                   <ArrowDownCircle className="w-5 h-5 text-brand-cream" />
                 </a>
 
-                {/* Bottom 2 Partner Logos */}
-                <div className="flex items-center gap-2.5 sm:gap-3">
-                  {/* Anondo Logo Card */}
-                  <div className="relative h-[48px] sm:h-[54px] w-[64px] sm:w-[74px] bg-white rounded-xl sm:rounded-2xl p-1 shadow-sm border border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                {/* Partner Logos in required sequence: 1st Jamuna Bank, 2nd AIUB, then Channel 24, Anondo, Novoair */}
+                <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
+                  {/* 1. Jamuna Bank */}
+                  <div className="relative h-[44px] sm:h-[50px] w-[105px] sm:w-[125px] bg-white rounded-xl sm:rounded-2xl p-1 shadow-sm border border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <Image
+                      src="/jamuna.png"
+                      alt="Jamuna Bank Logo"
+                      fill
+                      className="object-contain p-1"
+                    />
+                  </div>
+
+                  {/* 2. AIUB */}
+                  <div className="relative h-[44px] sm:h-[50px] w-[44px] sm:w-[52px] bg-white rounded-xl sm:rounded-2xl p-1 shadow-sm border border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <Image
+                      src="/aiub.jpeg"
+                      alt="AIUB Logo"
+                      fill
+                      className="object-contain p-1"
+                    />
+                  </div>
+
+                  {/* 3. Channel 24 */}
+                  <div className="relative h-[44px] sm:h-[50px] w-[46px] sm:w-[54px] bg-white rounded-xl sm:rounded-2xl p-1 shadow-sm border border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                    <Image
+                      src="/channel24.png"
+                      alt="Channel 24 Logo"
+                      fill
+                      className="object-contain p-1"
+                    />
+                  </div>
+
+                  {/* 4. Anondo Logo Card */}
+                  <div className="relative h-[44px] sm:h-[50px] w-[56px] sm:w-[66px] bg-white rounded-xl sm:rounded-2xl p-1 shadow-sm border border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
                     <Image
                       src="/anondo.jpeg"
                       alt="Anondo Logo"
@@ -98,8 +128,8 @@ export default function HeroBanner() {
                     />
                   </div>
 
-                  {/* Novoair Logo Card */}
-                  <div className="relative h-[48px] sm:h-[54px] w-[100px] sm:w-[124px] bg-white rounded-xl sm:rounded-2xl p-1 shadow-sm border border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
+                  {/* 5. Novoair Logo Card */}
+                  <div className="relative h-[44px] sm:h-[50px] w-[86px] sm:w-[104px] bg-white rounded-xl sm:rounded-2xl p-1 shadow-sm border border-white/20 flex items-center justify-center overflow-hidden flex-shrink-0">
                     <Image
                       src="/novoair.jpeg"
                       alt="NOVOAIR Logo"
@@ -117,8 +147,8 @@ export default function HeroBanner() {
             </div>
           </div>
 
-          {/* 2. Right Column: Full Banner Image without cropping */}
-          <div className="lg:col-span-6 flex justify-center items-center">
+          {/* 2. Right Column: Full Banner Image shifted a bit right */}
+          <div className="lg:col-span-5 flex justify-center lg:justify-end items-center lg:pl-2">
             <div className="relative w-full rounded-3xl overflow-hidden shadow-2xl border-2 border-brand-border/40 bg-black/40 group transition-all duration-300 hover:shadow-elevated hover:border-brand-border/70">
               <div className="relative w-full aspect-[1024/726]">
                 <Image
@@ -127,7 +157,7 @@ export default function HeroBanner() {
                   fill
                   priority
                   quality={95}
-                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  sizes="(max-width: 1024px) 100vw, 42vw"
                   className="object-contain w-full h-full"
                 />
               </div>
