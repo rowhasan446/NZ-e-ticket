@@ -37,16 +37,12 @@ const PersonSchema = new mongoose.Schema(
     },
     idType: {
       type: String,
-      required: [true, "পরিচয়পত্রের ধরন নির্বাচন করা আবশ্যক"],
+      default: "NID",
       enum: ["NID", "PASSPORT", "BIRTH_CERTIFICATE"],
     },
     idNumber: {
       type: String,
       required: false,
-      default: null,
-      unique: true,
-      sparse: true,
-      index: true,
       trim: true,
       uppercase: true,
     },
@@ -71,6 +67,17 @@ const PersonSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+  }
+);
+
+// Unique index on idNumber ONLY when it is provided as a non-empty string
+PersonSchema.index(
+  { idNumber: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      idNumber: { $type: "string", $gt: "" }
+    }
   }
 );
 

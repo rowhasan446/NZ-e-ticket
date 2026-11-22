@@ -109,7 +109,7 @@ export async function POST(request) {
       ? (idType === "PASSPORT"
           ? bnToEnDigits(rawIdNumber).replace(/[\s\-]/g, "").toUpperCase()
           : sanitizeNumberInput(rawIdNumber))
-      : null;
+      : undefined;
 
     // Validation
     const nameErr = validateName(name);

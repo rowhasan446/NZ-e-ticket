@@ -81,7 +81,7 @@ export async function POST(request) {
       ? (idType === "PASSPORT"
           ? bnToEnDigits(rawIdNumber).replace(/[\s\-]/g, "").toUpperCase()
           : sanitizeNumberInput(rawIdNumber))
-      : null;
+      : undefined;
 
     // 4. Server-side Validation
     const nameErr = validateName(name);
@@ -200,7 +200,7 @@ export async function POST(request) {
       phone,
       email,
       idType,
-      idNumber: idNumber || null,
+      idNumber: idNumber || undefined,
       idDocument: idDocData,
       photo: photoData,
       checkedIn: false,
