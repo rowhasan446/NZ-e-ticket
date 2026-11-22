@@ -38,7 +38,7 @@ export async function GET() {
       p.phone,
       p.email,
       getIdTypeLabel(p.idType),
-      p.idNumber,
+      p.idNumber || "—",
       p.checkedIn ? "সম্পন্ন" : "বাকি",
       p.checkedInAt ? formatBanglaDate(p.checkedInAt) : "—",
       p.createdAt ? formatBanglaDate(p.createdAt) : "—",

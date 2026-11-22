@@ -323,7 +323,7 @@ export default function PrintableCard({ person }) {
               <div className="print-col-span-2 sm:col-span-2 bg-brand-bg/40 p-3 pb-3.5 rounded-xl border border-brand-border/40 min-h-[66px] flex flex-col justify-center">
                 <span className="text-xs text-brand-muted block mb-0.5">পরিচয়পত্র নম্বর:</span>
                 <span className="font-mono font-bold text-brand-dark text-base tracking-wide leading-normal">
-                  {person.idNumber}
+                  {person.idNumber || "সংযুক্ত নেই"}
                 </span>
               </div>
 

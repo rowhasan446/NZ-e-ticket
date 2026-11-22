@@ -79,9 +79,11 @@ export async function PUT(request, { params }) {
 
     const phone = sanitizeNumberInput(rawPhone);
     const email = rawEmail ? rawEmail.trim().toLowerCase() : "";
-    const idNumber = idType === "PASSPORT"
-      ? bnToEnDigits(rawIdNumber).replace(/[\s\-]/g, "").toUpperCase()
-      : sanitizeNumberInput(rawIdNumber);
+    const idNumber = rawIdNumber && rawIdNumber.trim()
+      ? (idType === "PASSPORT"
+          ? bnToEnDigits(rawIdNumber).replace(/[\s\-]/g, "").toUpperCase()
+          : sanitizeNumberInput(rawIdNumber))
+      : null;
 
     // Validate
     const nameErr = validateName(name);
@@ -93,8 +95,10 @@ export async function PUT(request, { params }) {
     const emailErr = validateEmail(email);
     if (emailErr) return NextResponse.json({ success: false, error: emailErr }, { status: 400 });
 
-    const idNumberErr = validateIdNumber(idType, idNumber);
-    if (idNumberErr) return NextResponse.json({ success: false, error: idNumberErr }, { status: 400 });
+    if (idNumber) {
+      const idNumberErr = validateIdNumber(idType, idNumber, false);
+      if (idNumberErr) return NextResponse.json({ success: false, error: idNumberErr }, { status: 400 });
+    }
 
     // Check duplicate if changed
     if (phone !== person.phone) {
@@ -107,14 +111,14 @@ export async function PUT(request, { params }) {
       if (existingEmail) return NextResponse.json({ success: false, error: "এই ইমেইল ঠিকানাটি অন্য ব্যক্তির ক্ষেত্রে ব্যবহৃত হয়েছে।" }, { status: 409 });
     }
 
-    if (idNumber !== person.idNumber) {
+    if (idNumber && idNumber !== person.idNumber) {
       const existingId = await Person.findOne({ idNumber, _id: { $ne: id } });
       if (existingId) return NextResponse.json({ success: false, error: "এই পরিচয়পত্র নম্বরটি অন্য ব্যক্তির ক্ষেত্রে ব্যবহৃত হয়েছে।" }, { status: 409 });
     }
 
     // Handle replacement document upload if provided
     if (idDocumentFile && typeof idDocumentFile !== "string" && idDocumentFile.size > 0) {
-      const docFileErr = validateDocumentFile(idDocumentFile, true);
+      const docFileErr = validateDocumentFile(idDocumentFile, false);
       if (docFileErr) return NextResponse.json({ success: false, error: docFileErr }, { status: 400 });
 
       try {

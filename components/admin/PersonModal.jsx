@@ -95,14 +95,13 @@ export default function PersonModal({ isOpen, onClose, person, onSaved }) {
     const emailErr = validateEmail(formData.email);
     if (emailErr) errs.email = emailErr;
 
-    const idNumberErr = validateIdNumber(formData.idType, formData.idNumber);
-    if (idNumberErr) errs.idNumber = idNumberErr;
+    if (formData.idNumber && formData.idNumber.trim()) {
+      const idNumberErr = validateIdNumber(formData.idType, formData.idNumber, false);
+      if (idNumberErr) errs.idNumber = idNumberErr;
+    }
 
-    // Document is required when creating, optional when editing unless replacing
-    if (!isEditing) {
-      const docErr = validateDocumentFile(idDocumentFile, true);
-      if (docErr) errs.idDocument = docErr;
-    } else if (idDocumentFile) {
+    // Document is optional
+    if (idDocumentFile) {
       const docErr = validateDocumentFile(idDocumentFile, false);
       if (docErr) errs.idDocument = docErr;
     }
@@ -258,7 +257,7 @@ export default function PersonModal({ isOpen, onClose, person, onSaved }) {
           {/* ID Number */}
           <div>
             <label className="block text-xs sm:text-sm font-bold text-brand-heading mb-1">
-              {currentIdConfig.numberLabelBn} <span className="text-red-600">*</span>
+              {currentIdConfig.numberLabelBn} <span className="text-xs text-brand-muted font-normal">(ঐচ্ছিক)</span>
             </label>
             <input
               type="text"
@@ -274,8 +273,8 @@ export default function PersonModal({ isOpen, onClose, person, onSaved }) {
           {/* ID Document File */}
           <FileUpload
             label={isEditing ? `${currentIdConfig.docLabelBn} (পরিবর্তন করতে চাইলে)` : currentIdConfig.docLabelBn}
-            required={!isEditing}
-            helperText="JPG, PNG বা PDF (সর্বোচ্চ ৫ MB)"
+            required={false}
+            helperText="ঐচ্ছিক | JPG, PNG বা PDF (সর্বোচ্চ ৫ MB)"
             file={idDocumentFile}
             onChange={setIdDocumentFile}
             error={errors.idDocument}

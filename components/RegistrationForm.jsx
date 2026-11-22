@@ -97,11 +97,15 @@ export default function RegistrationForm() {
     const emailErr = validateEmail(formData.email);
     if (emailErr) newErrors.email = emailErr;
 
-    const idNumberErr = validateIdNumber(formData.idType, formData.idNumber);
-    if (idNumberErr) newErrors.idNumber = idNumberErr;
+    if (formData.idNumber && formData.idNumber.trim()) {
+      const idNumberErr = validateIdNumber(formData.idType, formData.idNumber, false);
+      if (idNumberErr) newErrors.idNumber = idNumberErr;
+    }
 
-    const docFileErr = validateDocumentFile(idDocumentFile, true);
-    if (docFileErr) newErrors.idDocument = docFileErr;
+    if (idDocumentFile) {
+      const docFileErr = validateDocumentFile(idDocumentFile, false);
+      if (docFileErr) newErrors.idDocument = docFileErr;
+    }
 
     if (photoFile) {
       const photoErr = validatePhotoFile(photoFile);
@@ -141,12 +145,14 @@ export default function RegistrationForm() {
       data.append("phone", bnToEnDigits(formData.phone).replace(/[\s\-]/g, "").trim());
       data.append("email", formData.email.trim().toLowerCase());
       data.append("idType", formData.idType);
-      data.append(
-        "idNumber", 
-        formData.idType === "PASSPORT" 
-          ? bnToEnDigits(formData.idNumber).replace(/[\s\-]/g, "").trim().toUpperCase()
-          : bnToEnDigits(formData.idNumber).replace(/[\s\-]/g, "").trim()
-      );
+      if (formData.idNumber && formData.idNumber.trim()) {
+        data.append(
+          "idNumber", 
+          formData.idType === "PASSPORT" 
+            ? bnToEnDigits(formData.idNumber).replace(/[\s\-]/g, "").trim().toUpperCase()
+            : bnToEnDigits(formData.idNumber).replace(/[\s\-]/g, "").trim()
+        );
+      }
       data.append("honeypot", formData.honeypot);
       
       if (idDocumentFile) {
@@ -323,10 +329,10 @@ export default function RegistrationForm() {
             <div className="space-y-1.5">
               <div className="flex items-center justify-between">
                 <label htmlFor="idNumber" className="block text-sm sm:text-base font-bold text-brand-heading">
-                  {currentIdConfig.numberLabelBn} <span className="text-red-600">*</span>
+                  {currentIdConfig.numberLabelBn} <span className="text-xs text-brand-muted font-normal">(ঐচ্ছিক)</span>
                 </label>
                 <span className="text-xs text-brand-muted hidden sm:inline">
-                  {currentIdConfig.helperBn}
+                  ঐচ্ছিক | {currentIdConfig.helperBn}
                 </span>
               </div>
               <div className="relative">
@@ -357,8 +363,8 @@ export default function RegistrationForm() {
             {/* 5. Document File Upload */}
             <FileUpload
               label={currentIdConfig.docLabelBn}
-              required={true}
-              helperText="সর্বোচ্চ ৫ মেগাবাইট (JPG, PNG বা PDF)"
+              required={false}
+              helperText="ঐচ্ছিক | সর্বোচ্চ ৫ মেগাবাইট (JPG, PNG বা PDF)"
               accept="image/jpeg,image/png,image/jpg,application/pdf"
               maxSizeMB={5}
               file={idDocumentFile}

@@ -105,9 +105,11 @@ export async function POST(request) {
 
     const phone = sanitizeNumberInput(rawPhone);
     const email = rawEmail ? rawEmail.trim().toLowerCase() : "";
-    const idNumber = idType === "PASSPORT"
-      ? bnToEnDigits(rawIdNumber).replace(/[\s\-]/g, "").toUpperCase()
-      : sanitizeNumberInput(rawIdNumber);
+    const idNumber = rawIdNumber && rawIdNumber.trim()
+      ? (idType === "PASSPORT"
+          ? bnToEnDigits(rawIdNumber).replace(/[\s\-]/g, "").toUpperCase()
+          : sanitizeNumberInput(rawIdNumber))
+      : null;
 
     // Validation
     const nameErr = validateName(name);
@@ -119,11 +121,15 @@ export async function POST(request) {
     const emailErr = validateEmail(email);
     if (emailErr) return NextResponse.json({ success: false, error: emailErr }, { status: 400 });
 
-    const idNumberErr = validateIdNumber(idType, idNumber);
-    if (idNumberErr) return NextResponse.json({ success: false, error: idNumberErr }, { status: 400 });
+    if (idNumber) {
+      const idNumberErr = validateIdNumber(idType, idNumber, false);
+      if (idNumberErr) return NextResponse.json({ success: false, error: idNumberErr }, { status: 400 });
+    }
 
-    const docFileErr = validateDocumentFile(idDocumentFile, true);
-    if (docFileErr) return NextResponse.json({ success: false, error: docFileErr }, { status: 400 });
+    if (idDocumentFile && typeof idDocumentFile !== "string" && idDocumentFile.size > 0) {
+      const docFileErr = validateDocumentFile(idDocumentFile, false);
+      if (docFileErr) return NextResponse.json({ success: false, error: docFileErr }, { status: 400 });
+    }
 
     if (photoFile && photoFile.size > 0) {
       const photoErr = validatePhotoFile(photoFile);
@@ -133,11 +139,14 @@ export async function POST(request) {
     await connectToDatabase();
 
     // Check duplicates
-    const [existingPhone, existingEmail, existingIdNumber] = await Promise.all([
+    const duplicatePromises = [
       Person.findOne({ phone }),
       Person.findOne({ email }),
-      Person.findOne({ idNumber }),
-    ]);
+    ];
+    if (idNumber) {
+      duplicatePromises.push(Person.findOne({ idNumber }));
+    }
+    const [existingPhone, existingEmail, existingIdNumber] = await Promise.all(duplicatePromises);
 
     if (existingPhone) return NextResponse.json({ success: false, error: "এই মোবাইল নম্বর দিয়ে ইতোমধ্যেই নিবন্ধন রয়েছে।" }, { status: 409 });
     if (existingEmail) return NextResponse.json({ success: false, error: "এই ইমেইল ঠিকানা দিয়ে ইতোমধ্যেই নিবন্ধন রয়েছে।" }, { status: 409 });
@@ -149,25 +158,27 @@ export async function POST(request) {
     const userId = `${USER_ID_PREFIX}-${paddedSeq}`;
 
     // Upload files
-    let idDocData = { url: "", publicId: "", resourceType: "image" };
+    let idDocData = null;
     let photoData = null;
 
     try {
-      const docBuffer = Buffer.from(await idDocumentFile.arrayBuffer());
-      const isDocPdf = idDocumentFile.type === "application/pdf" || idDocumentFile.name?.toLowerCase().endsWith(".pdf");
+      if (idDocumentFile && typeof idDocumentFile !== "string" && idDocumentFile.size > 0) {
+        const docBuffer = Buffer.from(await idDocumentFile.arrayBuffer());
+        const isDocPdf = idDocumentFile.type === "application/pdf" || idDocumentFile.name?.toLowerCase().endsWith(".pdf");
 
-      const docUploadRes = await uploadToCloudinary(docBuffer, {
-        public_id: `${userId}_doc_${Date.now()}`,
-        type: "authenticated",
-        resource_type: "image",
-        format: isDocPdf ? "pdf" : undefined,
-      });
+        const docUploadRes = await uploadToCloudinary(docBuffer, {
+          public_id: `${userId}_doc_${Date.now()}`,
+          type: "authenticated",
+          resource_type: "image",
+          format: isDocPdf ? "pdf" : undefined,
+        });
 
-      idDocData = {
-        url: docUploadRes.secure_url,
-        publicId: docUploadRes.public_id,
-        resourceType: isDocPdf ? "pdf" : "image",
-      };
+        idDocData = {
+          url: docUploadRes.secure_url,
+          publicId: docUploadRes.public_id,
+          resourceType: isDocPdf ? "pdf" : "image",
+        };
+      }
 
       if (photoFile && photoFile.size > 0) {
         const photoBuffer = Buffer.from(await photoFile.arrayBuffer());
@@ -182,7 +193,9 @@ export async function POST(request) {
       }
     } catch (e) {
       console.warn("Upload fallback in admin add:", e);
-      idDocData = { url: "/placeholder-doc.pdf", publicId: `local_${userId}`, resourceType: "raw" };
+      if (idDocumentFile && typeof idDocumentFile !== "string" && idDocumentFile.size > 0) {
+        idDocData = { url: "/placeholder-doc.pdf", publicId: `local_${userId}`, resourceType: "raw" };
+      }
     }
 
     const createdPerson = await Person.create({

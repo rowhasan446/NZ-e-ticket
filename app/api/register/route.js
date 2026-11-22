@@ -77,9 +77,11 @@ export async function POST(request) {
     // 3. Server-side Data Sanitization
     const phone = sanitizeNumberInput(rawPhone);
     const email = rawEmail ? rawEmail.trim().toLowerCase() : "";
-    const idNumber = idType === "PASSPORT"
-      ? bnToEnDigits(rawIdNumber).replace(/[\s\-]/g, "").toUpperCase()
-      : sanitizeNumberInput(rawIdNumber);
+    const idNumber = rawIdNumber && rawIdNumber.trim()
+      ? (idType === "PASSPORT"
+          ? bnToEnDigits(rawIdNumber).replace(/[\s\-]/g, "").toUpperCase()
+          : sanitizeNumberInput(rawIdNumber))
+      : null;
 
     // 4. Server-side Validation
     const nameErr = validateName(name);
@@ -91,11 +93,15 @@ export async function POST(request) {
     const emailErr = validateEmail(email);
     if (emailErr) return NextResponse.json({ success: false, error: emailErr }, { status: 400 });
 
-    const idNumberErr = validateIdNumber(idType, idNumber);
-    if (idNumberErr) return NextResponse.json({ success: false, error: idNumberErr }, { status: 400 });
+    if (idNumber) {
+      const idNumberErr = validateIdNumber(idType, idNumber, false);
+      if (idNumberErr) return NextResponse.json({ success: false, error: idNumberErr }, { status: 400 });
+    }
 
-    const docFileErr = validateDocumentFile(idDocumentFile, true);
-    if (docFileErr) return NextResponse.json({ success: false, error: docFileErr }, { status: 400 });
+    if (idDocumentFile && typeof idDocumentFile !== "string" && idDocumentFile.size > 0) {
+      const docFileErr = validateDocumentFile(idDocumentFile, false);
+      if (docFileErr) return NextResponse.json({ success: false, error: docFileErr }, { status: 400 });
+    }
 
     if (photoFile && photoFile.size > 0) {
       const photoErr = validatePhotoFile(photoFile);
@@ -122,12 +128,14 @@ export async function POST(request) {
       );
     }
 
-    const existingIdNumber = await Person.findOne({ idNumber });
-    if (existingIdNumber) {
-      return NextResponse.json(
-        { success: false, error: "এই পরিচয়পত্র নম্বর দিয়ে ইতোমধ্যে নিবন্ধন করা হয়েছে।" },
-        { status: 409 }
-      );
+    if (idNumber) {
+      const existingIdNumber = await Person.findOne({ idNumber });
+      if (existingIdNumber) {
+        return NextResponse.json(
+          { success: false, error: "এই পরিচয়পত্র নম্বর দিয়ে ইতোমধ্যে নিবন্ধন করা হয়েছে।" },
+          { status: 409 }
+        );
+      }
     }
 
     // 7. Atomic Auto-Increment Serial and UserId Generation
@@ -136,31 +144,28 @@ export async function POST(request) {
     const userId = `${USER_ID_PREFIX}-${paddedSeq}`;
 
     // 8. Upload Files to Cloudinary
-    let idDocData = {
-      url: "",
-      publicId: "",
-      resourceType: "image",
-    };
-
+    let idDocData = null;
     let photoData = null;
 
     try {
-      // Convert ID Document to Buffer
-      const docBuffer = Buffer.from(await idDocumentFile.arrayBuffer());
-      const isDocPdf = idDocumentFile.type === "application/pdf" || idDocumentFile.name?.toLowerCase().endsWith(".pdf");
+      // Convert ID Document to Buffer only if provided
+      if (idDocumentFile && typeof idDocumentFile !== "string" && idDocumentFile.size > 0) {
+        const docBuffer = Buffer.from(await idDocumentFile.arrayBuffer());
+        const isDocPdf = idDocumentFile.type === "application/pdf" || idDocumentFile.name?.toLowerCase().endsWith(".pdf");
 
-      const docUploadRes = await uploadToCloudinary(docBuffer, {
-        public_id: `${userId}_doc_${Date.now()}`,
-        type: "authenticated", // Private authenticated file
-        resource_type: "image",
-        format: isDocPdf ? "pdf" : undefined,
-      });
+        const docUploadRes = await uploadToCloudinary(docBuffer, {
+          public_id: `${userId}_doc_${Date.now()}`,
+          type: "authenticated", // Private authenticated file
+          resource_type: "image",
+          format: isDocPdf ? "pdf" : undefined,
+        });
 
-      idDocData = {
-        url: docUploadRes.secure_url,
-        publicId: docUploadRes.public_id,
-        resourceType: isDocPdf ? "pdf" : "image",
-      };
+        idDocData = {
+          url: docUploadRes.secure_url,
+          publicId: docUploadRes.public_id,
+          resourceType: isDocPdf ? "pdf" : "image",
+        };
+      }
 
       // Upload Photo if provided
       if (photoFile && photoFile.size > 0) {
@@ -178,11 +183,13 @@ export async function POST(request) {
     } catch (uploadError) {
       console.error("Cloudinary upload failed:", uploadError);
       // In development or if Cloudinary fails, save placeholder so registration flow continues
-      idDocData = {
-        url: "/placeholder-doc.pdf",
-        publicId: `local_placeholder_${userId}`,
-        resourceType: "raw",
-      };
+      if (idDocumentFile && typeof idDocumentFile !== "string" && idDocumentFile.size > 0) {
+        idDocData = {
+          url: "/placeholder-doc.pdf",
+          publicId: `local_placeholder_${userId}`,
+          resourceType: "raw",
+        };
+      }
     }
 
     // 9. Save Registration Record in MongoDB
@@ -193,7 +200,7 @@ export async function POST(request) {
       phone,
       email,
       idType,
-      idNumber,
+      idNumber: idNumber || null,
       idDocument: idDocData,
       photo: photoData,
       checkedIn: false,

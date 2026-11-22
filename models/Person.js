@@ -42,15 +42,17 @@ const PersonSchema = new mongoose.Schema(
     },
     idNumber: {
       type: String,
-      required: [true, "পরিচয়পত্র নম্বর লেখা আবশ্যক"],
+      required: false,
+      default: null,
       unique: true,
+      sparse: true,
       index: true,
       trim: true,
       uppercase: true,
     },
     idDocument: {
-      url: { type: String, required: true },
-      publicId: { type: String, required: true },
+      url: { type: String, default: null },
+      publicId: { type: String, default: null },
       resourceType: { type: String, default: "image" },
     },
     photo: {
